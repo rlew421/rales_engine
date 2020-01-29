@@ -6,7 +6,7 @@ Rails.application.routes.draw do
         get ':id/items', to: 'items#index'
       end
 
-      resources :merchants, only: [:index]
+      resources :merchants, only: [:index, :show]
     end
   end
 end
