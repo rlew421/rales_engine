@@ -10,6 +10,17 @@ describe "merchants API" do
     merchants = JSON.parse(response.body)
   end
 
+  it "sends one merchant by its id" do
+    id = create(:merchant).id
+
+    get "/api/v1/merchants/#{id}"
+
+    merchant = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(item["id"]).to eq(id)
+  end
+
   it "sends list of all items associated with one merchant" do
     merchant_1 = create(:merchant)
     merchant_2 = create(:merchant)
