@@ -18,7 +18,7 @@ describe "merchants API" do
     merchant = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(item["id"]).to eq(id)
+    expect(merchant["data"]["id"]).to eq("#{id}")
   end
 
   it "sends list of all items associated with one merchant" do
