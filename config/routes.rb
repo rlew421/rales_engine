@@ -6,11 +6,16 @@ Rails.application.routes.draw do
         get ':id/invoices', to: 'invoices#index'
         get ':id/transactions', to: 'transactions#index'
       end
+
       namespace :merchants do
         get ':id/items', to: 'items#index'
         get ':id/invoices', to: 'invoices#index'
       end
 
+      namespace :items do
+        get ':id/invoice_items', to: 'invoice_items#index'
+      end
+      
       resources :customers, only: [:index, :show]
 
       resources :merchants, only: [:index, :show]
