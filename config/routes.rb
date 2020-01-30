@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :merchants do
         get ':id/items', to: 'items#index'
+        get ':id/invoices', to: 'invoices#index'
       end
 
       resources :customers, only: [:index, :show]
