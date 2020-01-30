@@ -50,4 +50,18 @@ describe "items API" do
     expect(invoice_items["data"][1]["attributes"]["id"]).to eq(invoice_item_2.id)
     expect(invoice_items["data"][2]).to be_nil
   end
+
+  it "can send the merchant associated with one item" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    item = merchant_1.items.create
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"]["id"]).to eq("#{merchant_1.id}")
+  end
 end
