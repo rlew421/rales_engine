@@ -14,9 +14,6 @@ task :import => :environment do
   CSV.foreach("db/data/invoices.csv", headers: true) do |row|
     Invoice.create!(row.to_hash)
   end
-  CSV.foreach("db/data/invoice_items.csv", headers: true) do |row|
-    InvoiceItem.create!(row.to_hash)
-  end
   CSV.foreach("db/data/transactions.csv", headers: true) do |row|
     Transaction.create!(row.to_hash)
   end
