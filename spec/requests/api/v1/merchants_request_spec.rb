@@ -43,4 +43,23 @@ describe "merchants API" do
     expect(merchant_1_items["data"][1]["attributes"]["name"]).to eq(item_2.name)
     expect(merchant_1_items["data"][2]).to be_nil
   end
+
+  it "sends list of all invoices associated with one merchant" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = merchant_1.invoices.create(customer: customer)
+    invoice_2 = merchant_1.invoices.create(customer: customer)
+    invoice_3 = merchant_2.invoices.create(customer: customer)
+
+    get "/api/v1/merchants/#{merchant_1.id}/invoices"
+
+    expect(response).to be_successful
+    merchant_1_invoices = JSON.parse(response.body)
+
+    expect(merchant_1_invoices["data"].length).to eq(2)
+    expect(merchant_1_invoices["data"][0]["attributes"]["id"]).to eq(invoice_1.id)
+    expect(merchant_1_invoices["data"][1]["attributes"]["id"]).to eq(invoice_2.id)
+    expect(merchant_1_invoices["data"][2]).to be_nil
+  end
 end
