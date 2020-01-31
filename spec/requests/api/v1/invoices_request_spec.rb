@@ -119,4 +119,36 @@ describe "invoices API" do
     expect(items["data"][2]["attributes"]["id"]).to eq(item_3.id)
     expect(items["data"][3]).to be_nil
   end
+
+  it "sends the transactions associated with one invoice" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+
+    invoice_1 = customer.invoices.create(merchant: merchant, status: 'shipped')
+    invoice_2 = customer.invoices.create(merchant: merchant, status: 'shipped')
+
+    item_1 = merchant.items.create
+    item_2 = merchant.items.create
+    item_3 = merchant.items.create
+
+    invoice_item_1 = invoice_1.invoice_items.create(item: item_1)
+    invoice_item_2 = invoice_1.invoice_items.create(item: item_2)
+    invoice_item_3 = invoice_1.invoice_items.create(item: item_3)
+    invoice_item_4 = invoice_2.invoice_items.create(item: item_3)
+
+    transaction_1 = invoice_1.transactions.create
+    transaction_2 = invoice_1.transactions.create
+    transaction_3 = invoice_2.transactions.create
+
+    get "/api/v1/invoices/#{invoice_1.id}/transactions"
+
+    expect(response).to be_successful
+
+    transactions = JSON.parse(response.body)
+
+    expect(transactions["data"].length).to eq(2)
+    expect(transactions["data"][0]["attributes"]["id"]).to eq(transaction_1.id)
+    expect(transactions["data"][1]["attributes"]["id"]).to eq(transaction_2.id)
+    expect(transactions["data"][2]).to be_nil
+  end
 end
