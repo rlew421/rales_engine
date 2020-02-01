@@ -31,6 +31,72 @@ describe "invoices API" do
     expect(invoice["data"]["id"]).to eq("#{id}")
   end
 
+  it "can find one invoice by id" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = merchant.invoices.create(customer: customer)
+    invoice_2 = merchant.invoices.create(customer: customer)
+
+    get "/api/v1/invoices/find?id=#{invoice_2.id}"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["attributes"]["id"]).to eq(invoice_2.id)
+    expect(invoice["data"]["attributes"]["id"]).to_not eq(invoice_1.id)
+  end
+
+  it "can find one invoice by customer id" do
+    merchant = create(:merchant)
+    customer_1 = create(:customer)
+    customer_2 = create(:customer)
+    invoice_1 = merchant.invoices.create(customer: customer_1)
+    invoice_2 = merchant.invoices.create(customer: customer_2)
+
+    get "/api/v1/invoices/find?customer_id=#{customer_2.id}"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["attributes"]["id"]).to eq(invoice_2.id)
+    expect(invoice["data"]["attributes"]["id"]).to_not eq(invoice_1.id)
+  end
+
+  it "can find one invoice by merchant id" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = customer.invoices.create(merchant: merchant_1)
+    invoice_2 = customer.invoices.create(merchant: merchant_2)
+
+    get "/api/v1/invoices/find?merchant_id=#{merchant_2.id}"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["attributes"]["id"]).to eq(invoice_2.id)
+    expect(invoice["data"]["attributes"]["id"]).to_not eq(invoice_1.id)
+  end
+
+  it "can find first instance of invoice by status" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = customer.invoices.create(merchant: merchant, status: 'shipped')
+    invoice_2 = customer.invoices.create(merchant: merchant, status: 'shipped')
+
+    get "/api/v1/invoices/find?status=#{invoice_2.status}"
+
+    expect(response).to be_successful
+
+    invoice = JSON.parse(response.body)
+
+    expect(invoice["data"]["attributes"]["id"]).to eq(invoice_1.id)
+    expect(invoice["data"]["attributes"]["id"]).to_not eq(invoice_2.id)
+  end
+
   it "sends the customer associated with one invoice" do
     customer = create(:customer)
     merchant = create(:merchant)
