@@ -122,4 +122,30 @@ describe "merchants API" do
     expect(merchant_1_invoices["data"][1]["attributes"]["id"]).to eq(invoice_2.id)
     expect(merchant_1_invoices["data"][2]).to be_nil
   end
+
+  it "can find favorite customer of one merchant" do
+    customer_1 = create(:customer)
+    customer_2 = create(:customer)
+
+    merchant = create(:merchant)
+
+    invoice_1 = merchant.invoices.create(customer: customer_1)
+    invoice_2 = merchant.invoices.create(customer: customer_1)
+    invoice_3 = merchant.invoices.create(customer: customer_1)
+    invoice_4 = merchant.invoices.create(customer: customer_2)
+
+    transaction_1 = invoice_1.transactions.create(result: 'success')
+    transaction_2 = invoice_2.transactions.create(result: 'success')
+    transaction_3 = invoice_3.transactions.create(result: 'success')
+    transaction_4 = invoice_4.transactions.create(result: 'success')
+
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer"
+
+    expect(response).to be_successful
+
+    customer = JSON.parse(response.body)
+
+    expect(customer["data"]["id"]).to eq("#{customer_1.id}")
+    expect(customer["data"]["id"]).to_not eq("#{customer_2.id}")
+  end
 end
