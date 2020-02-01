@@ -7,7 +7,7 @@ Rails.application.routes.draw do
         get ':id/transactions', to: 'transactions#index'
       end
 
-      namespace :merchants, param: :filter do
+      namespace :merchants do
         get ':id/items', to: 'items#index'
         get ':id/invoices', to: 'invoices#index'
         get 'find', to: 'search#show'
@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       namespace :items do
         get ':id/invoice_items', to: 'invoice_items#index'
         get ':id/merchant', to: 'merchant#show'
+        get 'find', to: 'search#show'
       end
 
       namespace :invoices do
