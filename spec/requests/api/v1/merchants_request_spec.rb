@@ -38,6 +38,20 @@ describe "merchants API" do
     expect(merchant["data"]["attributes"]["id"]).to_not eq(id_1)
   end
 
+  it "can find all merchants by id" do
+    id_1 = create(:merchant).id
+    id_2 = create(:merchant).id
+
+    get "/api/v1/merchants/find_all?id=#{id_2}"
+
+    expect(response).to be_successful
+
+    merchant = JSON.parse(response.body)
+
+    expect(merchant["data"][0]["id"]).to eq("#{id_2}")
+    expect(merchant["data"][0]["id"]).to_not eq("#{id_1}")
+  end
+
   it "can find one merchant by name" do
     merchant_1 = create(:merchant)
     name_1 = merchant_1.name
@@ -54,6 +68,22 @@ describe "merchants API" do
     expect(merchant["data"]["attributes"]["id"]).to_not eq(merchant_2.id)
   end
 
+  it "can find all merchants by name" do
+    merchant_1 = create(:merchant)
+    name_1 = merchant_1.name
+    merchant_2 = create(:merchant)
+    name_2 = merchant_2.name
+
+    get "/api/v1/merchants/find_all?name=#{name_2}"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"][0]["id"]).to eq("#{merchant_2.id}")
+    expect(merchants["data"][0]["id"]).to_not eq("#{merchant_1.id}")
+  end
+
   it "can find one merchant by created at date" do
     merchant_1 = create(:merchant)
     merchant_2 = create(:merchant)
@@ -66,6 +96,20 @@ describe "merchants API" do
 
     expect(merchant["data"]["attributes"]["id"]).to eq(merchant_2.id)
     expect(merchant["data"]["attributes"]["id"]).to_not eq(merchant_1.id)
+  end
+
+  it "can find all merchants by created at date" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
+
+    get "/api/v1/merchants/find_all?created_at=#{merchant_2.created_at}"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"][0]["id"]).to eq("#{merchant_2.id}")
+    expect(merchants["data"][0]["id"]).to_not eq("#{merchant_1.id}")
   end
 
   it "can find one merchant by updated at date" do
@@ -82,7 +126,19 @@ describe "merchants API" do
     expect(merchant["data"]["attributes"]["id"]).to_not eq(merchant_1.id)
   end
 
+  it "can find all merchants by updated at date" do
+    merchant_1 = create(:merchant)
+    merchant_2 = create(:merchant)
 
+    get "/api/v1/merchants/find_all?updated_at=#{merchant_2.updated_at}"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body)
+
+    expect(merchants["data"][0]["id"]).to eq("#{merchant_2.id}")
+    expect(merchants["data"][0]["id"]).to_not eq("#{merchant_1.id}")
+  end
 
   it "sends list of all items associated with one merchant" do
     merchant_1 = create(:merchant)
