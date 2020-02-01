@@ -63,6 +63,32 @@ describe "invoice items API" do
     expect(invoice_item["data"]["attributes"]["id"]).to_not eq(invoice_item_1.id)
   end
 
+  it "can find all invoice items by id" do
+    merchant = create(:merchant)
+
+    customer = create(:customer)
+
+    invoice = customer.invoices.create(merchant: merchant)
+
+    item_1 = merchant.items.create
+    item_2 = merchant.items.create
+
+    invoice_item_1 = invoice.invoice_items.create(item: item_1)
+    invoice_item_2 = invoice.invoice_items.create(item: item_2)
+
+    id_1 = invoice_item_1.id
+    id_2 = invoice_item_2.id
+
+    get "/api/v1/invoice_items/find_all?id=#{invoice_item_2.id}"
+
+    expect(response).to be_successful
+
+    invoice_items = JSON.parse(response.body)
+
+    expect(invoice_items["data"][0]["id"]).to eq("#{id_2}")
+    expect(invoice_items["data"][0]["id"]).to_not eq("#{id_1}")
+  end
+
   it "can send the invoice associated with one invoice item" do
     customer = create(:customer)
     merchant = create(:merchant)
