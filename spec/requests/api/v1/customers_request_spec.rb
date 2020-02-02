@@ -38,6 +38,20 @@ describe 'customers API' do
     expect(customer["data"]["attributes"]["id"]).to_not eq(id_1)
   end
 
+  it "can find all customers by id" do
+    id_1 = create(:customer).id
+    id_2 = create(:customer).id
+
+    get "/api/v1/customers/find_all?id=#{id_2}"
+
+    expect(response).to be_successful
+
+    customer = JSON.parse(response.body)
+
+    expect(customer["data"][0]["id"]).to eq("#{id_2}")
+    expect(customer["data"][0]["id"]).to_not eq("#{id_1}")
+  end
+
   it "sends list of all invoices associated with one customer" do
     customer_1 = create(:customer)
     customer_2 = create(:customer)

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
         get ':id/invoices', to: 'invoices#index'
         get ':id/transactions', to: 'transactions#index'
         get 'find', to: 'search#show'
+        get 'find_all', to: 'search#index'
       end
 
       namespace :merchants do
