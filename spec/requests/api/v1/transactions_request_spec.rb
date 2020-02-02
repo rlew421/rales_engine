@@ -37,6 +37,25 @@ describe 'transactions API' do
     expect(transaction["data"]["id"]).to eq("#{id}")
   end
 
+  it "can find one transaction by id" do
+    merchant = create(:merchant)
+    customer = create(:customer)
+    invoice_1 = merchant.invoices.create(customer: customer)
+    invoice_2 = merchant.invoices.create(customer: customer)
+
+    transaction_1 = invoice_1.transactions.create
+    transaction_2 = invoice_2.transactions.create
+
+    get "/api/v1/transactions/find?id=#{transaction_2.id}"
+
+    expect(response).to be_successful
+
+    transaction = JSON.parse(response.body)
+
+    expect(transaction["data"]["attributes"]["id"]).to eq(transaction_2.id)
+    expect(transaction["data"]["attributes"]["id"]).to_not eq(transaction_1.id)
+  end
+
   it "sends the invoice associated with one transactions" do
     customer_1 = create(:customer)
     customer_2 = create(:customer)
