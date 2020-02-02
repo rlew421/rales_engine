@@ -46,6 +46,23 @@ describe "items API" do
     expect(item["data"]["attributes"]["id"]).to_not eq(id_1)
   end
 
+  it "can find all items by id" do
+    merchant = create(:merchant)
+    item_1 = merchant.items.create
+    item_2 = merchant.items.create
+    id_1 = item_1.id
+    id_2 = item_2.id
+
+    get "/api/v1/items/find_all?id=#{id_2}"
+
+    expect(response).to be_successful
+
+    items = JSON.parse(response.body)
+
+    expect(items["data"][0]["id"]).to eq("#{id_2}")
+    expect(items["data"][0]["id"]).to_not eq("#{id_1}")
+  end
+
   it "can find one item by name" do
     merchant = create(:merchant)
     item_1 = create(:item, merchant: merchant)
