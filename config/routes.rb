@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       namespace :customers do
         get ':id/invoices', to: 'invoices#index'
         get ':id/transactions', to: 'transactions#index'
+        get 'find', to: 'search#show'
       end
 
       namespace :merchants do
