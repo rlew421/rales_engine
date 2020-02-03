@@ -4,6 +4,8 @@
 
 Rales Engine is a JSON API that exposes data for 6 resources: customers, merchants, items, invoices, invoice items, and transactions. The restful endpoints return data for tables in the database, nested resources, and business intelligence.
 
+![image](https://user-images.githubusercontent.com/48839191/73233868-235bf780-4145-11ea-9698-a3fe86ff04b3.png)
+
 ## Setup
 
 * Clone this repository and change directories into this project directory
