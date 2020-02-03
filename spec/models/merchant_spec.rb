@@ -27,7 +27,7 @@ RSpec.describe Merchant, type: :model do
       expect(merchant.favorite_customer).to eq(customer_1)
     end
 
-    it "most_revenue" do
+    it "top merchants" do
       customer = create(:customer)
       merchant_1 = create(:merchant)
       merchant_2 = create(:merchant)
