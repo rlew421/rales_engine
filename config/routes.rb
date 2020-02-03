@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         get 'find', to: 'search#show'
         get 'find_all', to: 'search#index'
         get ':id/favorite_customer', to: 'statistics#favorite_customer'
+        get 'most_revenue', to: 'statistics#top_merchants_by_revenue'
       end
 
       namespace :items do
